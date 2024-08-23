@@ -30,7 +30,7 @@ Autumn 2024 Schedule - Course DTE-2802-1 : https://timeplan.uit.no/emne_timeplan
 
 ### Contact Information
 Best regards,
-Roy E Olsen (roy.e.olsen@uit.no, Campus Narvik, Office D2220)
+Roy E Olsen (roy.e.olsen@uit.no, Campus Narvik)
 
 **Last updated: 17.07.2024**
 
