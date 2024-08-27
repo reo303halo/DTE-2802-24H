@@ -1,14 +1,7 @@
 @{
-ViewData["Title"] = "My Garage";
+    ViewData["Title"] = "My Garage";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>My Garage</title>
-</head>
-<body>
 <div class="text-center">
     <h1 class="display-4">Cars</h1>
     @if (Model == null || Model?.Count == 0)
@@ -40,8 +33,4 @@ ViewData["Title"] = "My Garage";
         </table>
     }
 </div>
-</body>
-</html>
-
-
 
