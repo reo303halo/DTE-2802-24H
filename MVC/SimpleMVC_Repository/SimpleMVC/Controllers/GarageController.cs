@@ -20,11 +20,13 @@ public class GarageController : Controller
         return View(cars);
     }
 
+    // Create: GET
     public IActionResult Create()
     {
         return View();
     }
 
+    // Create: POST
     [HttpPost]
     public IActionResult Create([Bind("CarId,Make,Model,Year")] Car car)
     {
