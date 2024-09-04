@@ -1,33 +1,40 @@
+using Microsoft.EntityFrameworkCore;
 using StudentMVC.Data;
-using StudentMVC.Migrations;
 using StudentMVC.Models.Entities;
+using StudentMVC.Models.ViewModel;
 
 namespace StudentMVC.Models;
 
 public class StudentRepository : IStudentRepository
 {
-    private static List<Student> Students { get; }
+    private readonly StudentDbContext _db;
+    private StudentEditViewModel _viewModel;
 
-    static StudentRepository()
+    public StudentRepository(StudentDbContext db)
     {
-        Students = new List<Student>
-        {
-            new Student
-            {
-                StudentId = "rol000", Firstname = "Roy Espen", Lastname = "Olsen",
-                DegreeId = 2, Degree = new Degree { DegreeId = 2, Name = "Master"}
-            }
-        };
+        _db = db;
     }
     
     public IEnumerable<Student> GetAll()
     {
-        return Students;
+        var students = _db.Students
+            .Include(deg => deg.Degree)
+            .ToList();
+        return students;
     }
     
     public void Save(Student student)
     {
-        // Add Student to database
-        // Save changes
+        _db.Students.Add(student);
+        _db.SaveChanges();
+    }
+
+    public StudentEditViewModel GetStudentEditViewModel()
+    {
+        _viewModel = new StudentEditViewModel
+        {
+            Degrees = _db.Degrees.ToList()
+        };
+        return _viewModel;
     }
 }
