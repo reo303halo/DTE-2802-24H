@@ -1,10 +1,14 @@
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using StudentMVC.Data;
+using StudentMVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
 // Database
 builder.Services.AddDbContext<StudentDbContext>(options =>
