@@ -53,10 +53,9 @@ public class CupcakeController : Controller
                 CategoryId = cupcake.CategoryId
             };
             
-            _repository.Save(c);
+            _repository.Save(c, User);
             TempData["message"] = $"{c.Name} has been created!";
             return RedirectToAction("Index");
-
         }
         catch (Exception e)
         {
@@ -65,6 +64,4 @@ public class CupcakeController : Controller
             return RedirectToAction("Index");
         }
     }
-    
-    
 }

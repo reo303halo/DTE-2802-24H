@@ -1,6 +1,8 @@
+using System.Security.Principal;
 using CupcakeMVC.Data;
 using CupcakeMVC.Models.Entities;
 using CupcakeMVC.Models.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CupcakeMVC.Models;
@@ -9,10 +11,12 @@ public class CupcakeRepository : ICupcakeRepository
 {
     private readonly CupcakeDbContext _db;
     private CupcakeEditViewModel _viewModel;
+    private readonly UserManager<IdentityUser> _manager;
 
-    public CupcakeRepository(CupcakeDbContext db)
+    public CupcakeRepository(CupcakeDbContext db, UserManager<IdentityUser> userManager)
     {
         _db = db;
+        _manager = userManager;
     }
 
     public IEnumerable<Cupcake> GetAll()
@@ -22,6 +26,7 @@ public class CupcakeRepository : ICupcakeRepository
             var cupcakes = _db.Cupcake
                 .Include(size => size.Size)
                 .Include(cat => cat.Category)
+                .Include(c => c.Owner)
                 .ToList();
             return cupcakes;
         }
@@ -34,8 +39,11 @@ public class CupcakeRepository : ICupcakeRepository
         }
     }
 
-    public void Save(Cupcake cupcake)
+    public void Save(Cupcake cupcake, IPrincipal principal)
     {
+        var user = _manager.FindByNameAsync(principal.Identity.Name).Result;
+
+        cupcake.Owner = user;
         _db.Cupcake.Add(cupcake);
         _db.SaveChanges();
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CupcakeMVC.Migrations
 {
-    public partial class init : Migration
+    public partial class owner : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -120,8 +120,8 @@ namespace CupcakeMVC.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -165,8 +165,8 @@ namespace CupcakeMVC.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -189,11 +189,18 @@ namespace CupcakeMVC.Migrations
                     Name = table.Column<string>(type: "TEXT", maxLength: 32, nullable: true),
                     Description = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     SizeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CategoryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    OwnerId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cupcake", x => x.CupcakeId);
+                    table.ForeignKey(
+                        name: "FK_Cupcake_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Cupcake_Category_CategoryId",
                         column: x => x.CategoryId,
@@ -207,6 +214,11 @@ namespace CupcakeMVC.Migrations
                         principalColumn: "SizeId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "default-id", 0, "c1b5fd68-dcb3-4b55-9b04-180172ff7e1f", "default@example.com", true, false, null, "DEFAULT@EXAMPLE.COM", "DEFAULT@EXAMPLE.COM", "AQAAAAEAACcQAAAAEL/seF5zhNgiUVg0mbwBMH2TGTofGIn7Tz3cCaUAHPsB0aT2xLFLSsNs42Oq4gzvIg==", null, false, "", false, "default@example.com" });
 
             migrationBuilder.InsertData(
                 table: "Category",
@@ -250,23 +262,23 @@ namespace CupcakeMVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "Cupcake",
-                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "SizeId" },
-                values: new object[] { 1, 1, "Stuffed with fresh strawberries and topped with fluffy whipped cream, these strawberry shortcake cupcakes are simply divine. Plus, the vanilla cupcake batter couldn’t be easier to whip up.", "Strawberry Shortcake", 3 });
+                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "OwnerId", "SizeId" },
+                values: new object[] { 1, 1, "Stuffed with fresh strawberries and topped with fluffy whipped cream, these strawberry shortcake cupcakes are simply divine. Plus, the vanilla cupcake batter couldn’t be easier to whip up.", "Strawberry Shortcake", "default-id", 3 });
 
             migrationBuilder.InsertData(
                 table: "Cupcake",
-                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "SizeId" },
-                values: new object[] { 2, 1, "Filled with lemon curd and topped with lemon buttercream frosting, these cupcakes are sweet, tangy, and jam-packed with flavor. They taste like lemon drop candies in cupcake form.", "Lemon Cupcakes", 3 });
+                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "OwnerId", "SizeId" },
+                values: new object[] { 2, 1, "Filled with lemon curd and topped with lemon buttercream frosting, these cupcakes are sweet, tangy, and jam-packed with flavor. They taste like lemon drop candies in cupcake form.", "Lemon Cupcakes", "default-id", 3 });
 
             migrationBuilder.InsertData(
                 table: "Cupcake",
-                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "SizeId" },
-                values: new object[] { 3, 1, "These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.", "Chocolate Cupcakes with Peanut Butter Frosting", 2 });
+                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "OwnerId", "SizeId" },
+                values: new object[] { 3, 1, "These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.", "Chocolate Cupcakes with Peanut Butter Frosting", "default-id", 2 });
 
             migrationBuilder.InsertData(
                 table: "Cupcake",
-                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "SizeId" },
-                values: new object[] { 4, 2, "Have a penchant for coconut? These cupcakes are made with a soft, fluffy vanilla cake topped with a coconut cream cheese buttercream frosting. Toasted coconut sprinkled on top makes the entire cupcake tastier.", "Coconut Cupcakes", 2 });
+                columns: new[] { "CupcakeId", "CategoryId", "Description", "Name", "OwnerId", "SizeId" },
+                values: new object[] { 4, 2, "Have a penchant for coconut? These cupcakes are made with a soft, fluffy vanilla cake topped with a coconut cream cheese buttercream frosting. Toasted coconut sprinkled on top makes the entire cupcake tastier.", "Coconut Cupcakes", "default-id", 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -309,6 +321,11 @@ namespace CupcakeMVC.Migrations
                 name: "IX_Cupcake_CategoryId",
                 table: "Cupcake",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cupcake_OwnerId",
+                table: "Cupcake",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cupcake_SizeId",

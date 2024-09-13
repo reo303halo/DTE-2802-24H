@@ -66,12 +66,18 @@ namespace CupcakeMVC.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SizeId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("CupcakeId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("SizeId");
 
@@ -84,6 +90,7 @@ namespace CupcakeMVC.Migrations
                             CategoryId = 1,
                             Description = "Stuffed with fresh strawberries and topped with fluffy whipped cream, these strawberry shortcake cupcakes are simply divine. Plus, the vanilla cupcake batter couldn’t be easier to whip up.",
                             Name = "Strawberry Shortcake",
+                            OwnerId = "default-id",
                             SizeId = 3
                         },
                         new
@@ -92,6 +99,7 @@ namespace CupcakeMVC.Migrations
                             CategoryId = 1,
                             Description = "Filled with lemon curd and topped with lemon buttercream frosting, these cupcakes are sweet, tangy, and jam-packed with flavor. They taste like lemon drop candies in cupcake form.",
                             Name = "Lemon Cupcakes",
+                            OwnerId = "default-id",
                             SizeId = 3
                         },
                         new
@@ -100,6 +108,7 @@ namespace CupcakeMVC.Migrations
                             CategoryId = 1,
                             Description = "These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.These cupcakes are the ultimate chocolate and peanut butter dessert. A dollop of peanut butter frosting tops moist chocolate cupcakes with chocolate drizzle and mini peanut butter cups.",
                             Name = "Chocolate Cupcakes with Peanut Butter Frosting",
+                            OwnerId = "default-id",
                             SizeId = 2
                         },
                         new
@@ -108,6 +117,7 @@ namespace CupcakeMVC.Migrations
                             CategoryId = 2,
                             Description = "Have a penchant for coconut? These cupcakes are made with a soft, fluffy vanilla cake topped with a coconut cream cheese buttercream frosting. Toasted coconut sprinkled on top makes the entire cupcake tastier.",
                             Name = "Coconut Cupcakes",
+                            OwnerId = "default-id",
                             SizeId = 2
                         });
                 });
@@ -265,6 +275,24 @@ namespace CupcakeMVC.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "default-id",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c1b5fd68-dcb3-4b55-9b04-180172ff7e1f",
+                            Email = "default@example.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DEFAULT@EXAMPLE.COM",
+                            NormalizedUserName = "DEFAULT@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL/seF5zhNgiUVg0mbwBMH2TGTofGIn7Tz3cCaUAHPsB0aT2xLFLSsNs42Oq4gzvIg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "default@example.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -358,6 +386,12 @@ namespace CupcakeMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CupcakeMVC.Models.Entities.Size", "Size")
                         .WithMany("Cupcakes")
                         .HasForeignKey("SizeId")
@@ -365,6 +399,8 @@ namespace CupcakeMVC.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Owner");
 
                     b.Navigation("Size");
                 });
