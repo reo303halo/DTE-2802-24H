@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace CupcakeMVC.Models.Entities;
 
@@ -15,4 +16,7 @@ public class Cupcake
     
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
+    
+    public string OwnerId { get; set; } 
+    public IdentityUser Owner { get; set; }
 }
