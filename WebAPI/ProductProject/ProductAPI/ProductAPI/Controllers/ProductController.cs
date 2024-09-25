@@ -41,8 +41,27 @@ public class ProductController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = newProduct.Id }, newProduct);
     }
     
-    [HttpPut]
-    // await _service.Save(existingProduct);
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Product product)
+    {
+        if (id != product.Id)
+            return BadRequest("Id from Route does not match product id.");
+
+        var existingProduct = _service.Get(id);
+
+        if (existingProduct is null)
+            return NotFound($"No product with the id {id}.");
+
+        var newProduct = new Product
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price
+        };
+
+        await _service.Save(newProduct);
+        return Ok("Product successfully updated.");
+    }
 
     [HttpDelete("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
