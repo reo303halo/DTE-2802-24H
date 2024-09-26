@@ -1,0 +1,26 @@
+@model ProductInventory.Models.ViewModel.ProductEditViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit product</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <h1>Edit</h1>
+                <hr />
+                <partial name="CreateEditPartialView" model="@Model" />
+            </form>
+            <div>
+                <a asp-controller="Product" asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+@section Scripts
+    {@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}}
