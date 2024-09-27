@@ -146,8 +146,6 @@ public class ComputerService : IComputerService
         await _db.SaveChangesAsync();
     }
     
-    
-
     public async Task Delete(int id)
     {
         var computer = _db.Computer.FindAsync(id);
