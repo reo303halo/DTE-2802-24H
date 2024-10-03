@@ -1,6 +1,7 @@
 using ComputerInventoryAPI.Models;
 using ComputerInventoryAPI.Models.Entities;
 using ComputerInventoryAPI.Services.ComputerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerInventoryAPI.Controllers;
@@ -98,6 +99,7 @@ public class ComputerController : ControllerBase
         return Ok(new { Message = $"Computer with id {id} successfully updated!", Computer = updatedComputer });
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
     {

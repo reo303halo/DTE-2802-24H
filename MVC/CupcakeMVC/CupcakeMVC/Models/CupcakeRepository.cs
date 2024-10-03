@@ -24,8 +24,8 @@ public class CupcakeRepository : ICupcakeRepository
         try
         {
             var cupcakes = _db.Cupcake
-                .Include(size => size.Size)
-                .Include(cat => cat.Category)
+                .Include(c => c.Size)
+                .Include(c => c.Category)
                 .Include(c => c.Owner)
                 .ToList();
             return cupcakes;
