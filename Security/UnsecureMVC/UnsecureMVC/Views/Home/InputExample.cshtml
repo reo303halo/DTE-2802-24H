@@ -1,0 +1,41 @@
+﻿@using System.Web
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+ViewData["Title"] = "Input Example";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Input Example</h1>
+
+    <h2>Insecure Input</h2>
+    <form method="post" action="/Home/InsecureSubmit">
+        <div class="form-group">
+            <label for="untrustedInput">Enter some text:</label>
+            <input type="text" class="form-control" id="untrustedInput" name="untrustedInput">
+        </div>
+        <button type="submit" class="btn btn-danger">Submit Insecure</button>
+    </form>
+
+    @if (ViewBag.UntrustedInput != null)
+    {
+    <div class="alert alert-danger mt-3">
+        @Html.Raw(ViewBag.UntrustedInput)
+    </div>
+    }
+
+    <h2>Secure Input</h2>
+    <form method="post" action="/Home/SecureSubmit">
+        <div class="form-group">
+            <label for="trustedInput">Enter some text:</label>
+            <input type="text" class="form-control" id="trustedInput" name="trustedInput">
+        </div>
+        <button type="submit" class="btn btn-success">Submit Secure</button>
+    </form>
+
+    @if (ViewBag.TrustedInput != null)
+    {
+    <div class="alert alert-success mt-3">
+        @ViewBag.TrustedInput)
+    </div>
+    }
+</div>
