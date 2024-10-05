@@ -14,6 +14,15 @@ var connectionString = builder.Configuration
                            "Connection string 'ApplicationContextConnection' not found.");
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllRequests", policyBuilder =>
+    {
+        policyBuilder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -56,6 +65,8 @@ builder.Services.AddTransient<IComputerService, ComputerService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 
 var app = builder.Build();
+
+app.UseCors("AllowAllRequests");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -16,7 +16,8 @@ public class ComputerController : ControllerBase
     {
         _service = service;
     }
-
+    
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetComputers()
     {
