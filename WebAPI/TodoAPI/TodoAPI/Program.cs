@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using TodoAPI.Models;
+using TodoAPI.Data;
 
 // Start code from https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("TodoDbContextConnection") ??
+    throw new InvalidOperationException("No connection string found.");
 
 builder.Services.AddCors(options =>
 {
@@ -17,7 +19,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    opt.UseSqlite(connectionString));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
