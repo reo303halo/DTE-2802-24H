@@ -1,0 +1,26 @@
+@page "/generateUsername"
+@rendermode InteractiveServer
+
+<PageTitle>Generate Username</PageTitle>
+
+<h1>Generate Username</h1>
+
+<input @bind="_firstName" placeholder="First name"/>
+<input @bind="_lastName" placeholder="Last name"/>
+<button class="btn btn-primary" @onclick="GenerateUitUsername">Create Username</button>
+
+<p role="status">Username: @_username</p>
+
+@code {
+    private string _username = "";
+    private string _firstName = "";
+    private string _lastName = "";
+
+    private void GenerateUitUsername()
+    {
+        var random = new Random();
+        var randomDigits = random.Next(0, 1000).ToString("D3"); // 3 random digits
+
+        _username = $"{_firstName[0]}{_lastName[..2]}{randomDigits}".ToLower();
+    }
+}
