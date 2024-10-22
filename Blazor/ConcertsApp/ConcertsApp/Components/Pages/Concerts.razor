@@ -1,0 +1,67 @@
+@page "/concerts"
+@using ConcertsApp.Data
+@using ConcertsApp.Components.Shared
+@attribute [StreamRendering]
+
+<PageTitle>Concerts</PageTitle>
+
+<h1>Concerts</h1>
+
+<p>This component shows dates and locations for some concerts.</p>
+
+@if (_concertsArray == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Country</th>
+            <th>City</th>
+            <th>Scene</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @foreach (var c in _concertsArray)
+        {
+            <tr>
+                <td>@c.Country</td>
+                <td>@c.City</td>
+                <td>@c.Scene</td>
+                <td>@c.Date.ToShortDateString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<SponsorLink Title="Like our page?" Param="2"></SponsorLink>
+
+@code {
+    private Concert[]? _concertsArray;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+        
+        var countries = new[] { "Norway", "Norway", "Norway", "Sweden", "Copenhagen", "Poland" };
+        var cities = new[] { "Oslo", "Tromsø", "Narvik", "Stockholm", "Copenhagen", "Gdansk" };
+        var scenes = new[] { "Telenor Arena", "Tromsø Sentrum", "Haikjeften", "Stockholm Theater", "Copenhagen Stadium", "Gdansk Outdoor Arena" };
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        
+        _concertsArray = Enumerable.Range(0, countries.Length).Select(index => new Concert
+        {
+            Country = countries[index],
+            City = cities[index],
+            Scene = scenes[index],
+            Date = startDate.AddDays(index)
+        }).ToArray();
+    }
+}
