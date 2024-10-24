@@ -1,6 +1,8 @@
 @page "/concerts"
 @using ConcertsApp.Data
 @using ConcertsApp.Components.Shared
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ConcertContext> DbFactory
 @attribute [StreamRendering]
 
 <PageTitle>Concerts</PageTitle>
@@ -48,20 +50,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-        
-        var countries = new[] { "Norway", "Norway", "Norway", "Sweden", "Copenhagen", "Poland" };
-        var cities = new[] { "Oslo", "Tromsø", "Narvik", "Stockholm", "Copenhagen", "Gdansk" };
-        var scenes = new[] { "Telenor Arena", "Tromsø Sentrum", "Haikjeften", "Stockholm Theater", "Copenhagen Stadium", "Gdansk Outdoor Arena" };
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        
-        _concertsArray = Enumerable.Range(0, countries.Length).Select(index => new Concert
-        {
-            Country = countries[index],
-            City = cities[index],
-            Scene = scenes[index],
-            Date = startDate.AddDays(index)
-        }).ToArray();
+        await using var context = await DbFactory.CreateDbContextAsync();
+        _concertsArray = await context.Concerts.ToArrayAsync();
     }
 }
