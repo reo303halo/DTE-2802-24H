@@ -1,0 +1,66 @@
+@page "/todoList"
+@using Todo.Data.Models
+@inject HttpClient Client
+@rendermode InteractiveServer
+
+<h3 class="text-center my-4">Todo List (@_todoItems.Count(t => !t.IsComplete))</h3>
+
+@if (_todoItems.Count == 0)
+{
+    <div class="text-center">
+        <p><em>No tasks.</em></p>
+    </div>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var item in _todoItems)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">
+                                <input type=checkbox @bind="item.IsComplete"> @(item.IsComplete ? "Completed" : "Pending")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    
+    <input @bind="@_newTodo">
+    <button @onclick="AddTodo">Add todo</button>
+}
+
+@code {
+    private List<TodoItem> _todoItems = [];
+    string _newTodo = "";
+    private const string BaseUrl = "https://localhost:7122/api/Todo";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var todoArray = await Client.GetFromJsonAsync<TodoItem[]>(BaseUrl);
+        if (todoArray != null) _todoItems = todoArray.ToList();
+    }
+
+    private async Task AddTodo()
+    {
+        if (string.IsNullOrWhiteSpace(_newTodo)) return;
+
+        var newItem = new TodoItem { Name = _newTodo, IsComplete = false };
+        var response = await Client.PostAsJsonAsync(BaseUrl, newItem);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _todoItems.Add(newItem); // Add to the local list.
+            _newTodo = "";           // Clear the input field
+        }
+        else
+        {
+            // Handle Error
+        }
+    }
+}
