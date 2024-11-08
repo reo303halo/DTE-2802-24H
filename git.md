@@ -74,7 +74,10 @@ git checkout <name of branch you want to switch to>
 
 **Retrieving a List of All Local Branches:**
 To obtain a comprehensive list of all local branches, execute this command:
-**Git Branch Commands**
+
+```shell
+git branch
+```
 
 **Deleting a Branch:**
 To remove a branch, execute the following command:
