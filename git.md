@@ -1,5 +1,5 @@
 # Git
-**Git Basics**
+## **Git Basics**
 
 **Cloning a Repository:**
 To clone a repository to your local machine, execute the following command:
@@ -56,7 +56,8 @@ To finalize your changes and push them to the online repository, execute this co
 git push
 ```
 
-**Branches:**
+
+## **Branches:**
 
 **Creating a New Branch:**
 To create a new branch, execute the following command:
