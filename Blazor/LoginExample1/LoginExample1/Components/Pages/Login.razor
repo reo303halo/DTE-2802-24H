@@ -1,0 +1,65 @@
+@page "/Login"
+@using System.Text.Json
+@using LoginExample1.Data.Models
+@rendermode InteractiveServer
+@inject IJSRuntime JsRuntime
+@inject HttpClient Client
+
+<PageTitle>Login</PageTitle>
+
+<h3>Login</h3>
+
+<div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" class="form-control" @bind="_loginDto.Username" />
+</div>
+
+<div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" class="form-control" @bind="_loginDto.Password" />
+</div>
+
+<button class="btn btn-primary" @onclick="LoginButton">Login</button>
+<button class="btn btn-primary" @onclick="Logout">Logout</button>
+
+<p>@ResponseMessage</p>
+
+@code {
+    private readonly LoginDto _loginDto = new();
+    private string ResponseMessage { get; set; } = string.Empty;
+    private const string BaseUrl = "https://localhost:7017/api"; // Edit to match the requested APIs URL
+
+    private async Task LoginButton()
+    {
+        // Send login data to API
+        var response = await Client.PostAsJsonAsync($"{BaseUrl}/Auth/Login", _loginDto);
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            
+            // Keep code object-oriented by using a TokenDTO
+            var tokenDto = JsonSerializer.Deserialize<TokenDto>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true // Will make "token" work with DTO "Token"
+            });
+
+            // Set data in localStorage
+            if (tokenDto is { IsSuccess: true })
+            {
+                var token = "Bearer " + tokenDto.Token;
+                await JsRuntime.InvokeVoidAsync("localStorage.setItem", "jwt", token);
+                ResponseMessage = tokenDto.Message;
+            }
+        }
+        else
+        {
+            // Give message to user if login fails...
+            ResponseMessage = $"Login failed: {response.ReasonPhrase}";
+        }
+    }
+
+    private async void Logout()
+    {
+        await JsRuntime.InvokeVoidAsync("localStorage.removeItem", "jwt");
+    }
+}
